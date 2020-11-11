@@ -1,6 +1,7 @@
 #!/bin/bash
 #SBATCH --nodes=1
-#SBATCH --time=120:00:00
+#SBATCH --time=2:00:00
+#SBATCH --array=1-137:1
 #SBATCH --job-name=filter_reads
 #SBATCH --output=filter_reads.log
 #SBATCH --error=filter_reads.error
@@ -29,15 +30,14 @@
 
 Sample_List=/data/zool-zost/Novogene/sample.list.txt
 
-# STEP 2:
-# Define path to trimmomatic, FastUniq and file specifying input for
-# FastUniq:
-trimmomatic_path=/data/zool-zost/BIN/Trimmomatic-0.39/trimmomatic-0.39.jar
-fastuniq_path=/data/zool-zost/BIN/FastUniq/source/fastuniq
-FastUniq_input=/data/zool-zost/Novogene/Scripts/fastqlist.txt
-#Note: FastUniq_input is a simple text file that looks like this:
-#AdapterTrimmed_forward_paired.fq
-#AdapterTrimmed_reverse_paired.fq
+# STEP 4:
+# Use slurm array task ID to alocate sample name and directory
+SAMPLE_NAME=$(cat $Sample_List | head -n $SLURM_ARRAY_TASK_ID | tail -1 | awk {'print $1}')
+SAMPLE_DIRECTORY=$(cat $Sample_List | head -n $SLURM_ARRAY_TASK_ID | tail -1 | awk {'print $2}')
+
+# STEP 5:
+#move into sample directory
+cd $SAMPLE_DIRECTORY
 
 # STEP 3:
 #Load java
@@ -47,23 +47,10 @@ module load java/1.8.0
 # Set up for loop to conduct filtering for each sample
 # 1..193 <- this will need to be amended depending on number of samples
 # included in sample.list.txt
-for ROW in {1..193}
+for ReadPair in `ls ${SAMPLE_NAME}_*_1.fq.gz | cut -f1,2,3,4 -d'_'`
 do
 
-  #Create sample name and sample directory variables
-  SAMPLE_NAME=$(cat $Sample_List | head -n $ROW | tail -1 | awk {'print $1}')
-  SAMPLE_DIRECTORY=$(cat $Sample_List | head -n $ROW | tail -1 | awk {'print $2}')
-
-  #move into sample directory
-  cd $SAMPLE_DIRECTORY
-
-  echo "Commencing filtering for sample: $SAMPLE_NAME"
-
-  #
-  for ReadPair in `ls ${SAMPLE_NAME}_*_1.fq.gz | cut -f1,2,3,4 -d'_'`
-  do
-
-    #Use trimmomatic to remove reads that dont meet quality thresh
+    #Use trimmomatic to remove reads that dont meet quality threshold
     echo "Trimming reads ..."
 
     java -jar $trimmomatic_path PE \
@@ -74,7 +61,7 @@ do
     AdapterTrimmed_reverse_paired.fq \
     AdapterTrimmed_reverse_unpaired.fq \
     ILLUMINACLIP:/data/zool-zost/BIN/Trimmomatic-0.39/adapters/NovogeneIlluminaAdapters.fa:2:8:10 \
-    SLIDINGWINDOW:4:15 MINLEN:100
+    HEADCROP:5 SLIDINGWINDOW:4:15 MINLEN:100
 
     #remove unpaired fastq files produced by Trimmomatic (these
     #wont be needed)
@@ -94,13 +81,5 @@ do
 
     #Remove intermediate fastq files
     rm *.fq
-
-  done
-
-  echo "Filtering complete"
-
-  #Once read filtering for sample completed move back to Novogene
-  #directory
-  cd /data/zool-zost/Novogene
 
 done
