@@ -17,7 +17,12 @@
 #                                                                       #
 # This script requires the number of jobs to match the number of lines  #
 # in file sample.list.txt (update #SBATCH --array=1-137:1)              #
+#                                                                       #
 #########################################################################
+
+# Move into directory for gvcf files
+mkdir /data/zool-zost/Novogene/Sample_gVCFs
+cd /data/zool-zost/Novogene/Sample_gVCFs
 
 # Load java module (needed to launch GATK)
 module load java/1.8.0
@@ -26,18 +31,22 @@ module load java/1.8.0
 # The reference genome assembly (silvereye v.1)
 FASTA=/data/zool-zost/Ref_Genome/GCA_001281735.1_ASM128173v1_genomic.fna
 
-# Get sample name using slurm task ID
-SAMPLE_NAME=$(cat Sample.list | head -n $SLURM_ARRAY_TASK_ID | tail -1 )
+# Set path to sample list
+SAMPLE_LIST=Sample.list
+
+# Get sample name and sample diretory using slurm task ID
+SAMPLE_NAME=$(cat $SAMPLE_LIST | head -n $SLURM_ARRAY_TASK_ID | tail -1 | awk {'print $1}')
+SAMPLE_DIRECTORY=$(cat $SAMPLE_LIST | head -n $SAMPLE_NO | tail -1 | awk {'print $2}')
 
 # Get path to sample bam file
-BAM=/data/zool-zost/Novogene/
+BAM=/data/zool-zost/Novogene/${SAMPLE_DIRECTORY}/${SAMPLE_NAME}.bam
 
-_Sample_Bams/${SAMPLE_NAME}.bam
-
-# GATK Jar file
+# Set path to GATK Jar file
 GATK_JAR=/data/zool-zost/BIN/gatk-4.1.9.0/gatk   
 
 # Call geotypes with GATK haplotype caller.
+# EMIT_ALL_CONFIDENT_SITES = output both SNPs and non-variant sites
+# BP_RESOLUTION = output invariant sites 1 by 1 rather than as blocks
 $GATK_JAR --java-options "-Xmx4g" HaplotypeCaller \
 -R $FASTA \
 -I $BAM \
