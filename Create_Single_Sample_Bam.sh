@@ -16,7 +16,7 @@
 # into a single bam file per sample.                                    #
 #                                                                       #
 # Note: requires output from script                                     #
-# "/data/zool-zost/Novogene/Scripts/Map_Reads.sh"                       #
+# "/data/zool-zost/Novogene/Scripts/Map_sample_reads.sh"                #
 # This script requires the number of jobs to match the number of lines  #
 # in file sample.list.txt (update #SBATCH --array=1-137:1)              #                             
 #########################################################################
