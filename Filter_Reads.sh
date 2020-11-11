@@ -44,6 +44,16 @@ cd $SAMPLE_DIRECTORY
 module load java/1.8.0
 
 # STEP 4:
+# Define path to trimmomatic, FastUniq and file specifying input for
+# FastUniq:
+trimmomatic_path=/data/zool-zost/BIN/Trimmomatic-0.39/trimmomatic-0.39.jar
+fastuniq_path=/data/zool-zost/BIN/FastUniq/source/fastuniq
+FastUniq_input=/data/zool-zost/Novogene/Scripts/fastqlist.txt
+#Note: FastUniq_input is a simple text file that looks like this:
+#AdapterTrimmed_forward_paired.fq
+#AdapterTrimmed_reverse_paired.fq
+
+# STEP 5:
 # Set up for loop to conduct filtering for each sample
 # 1..193 <- this will need to be amended depending on number of samples
 # included in sample.list.txt
