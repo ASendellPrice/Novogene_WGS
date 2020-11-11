@@ -30,20 +30,20 @@
 
 Sample_List=/data/zool-zost/Novogene/sample.list.txt
 
-# STEP 4:
+# STEP 2:
 # Use slurm array task ID to alocate sample name and directory
 SAMPLE_NAME=$(cat $Sample_List | head -n $SLURM_ARRAY_TASK_ID | tail -1 | awk {'print $1}')
 SAMPLE_DIRECTORY=$(cat $Sample_List | head -n $SLURM_ARRAY_TASK_ID | tail -1 | awk {'print $2}')
 
-# STEP 5:
+# STEP 3:
 #move into sample directory
 cd $SAMPLE_DIRECTORY
 
-# STEP 3:
+# STEP 4:
 #Load java
 module load java/1.8.0
 
-# STEP 4:
+# STEP 5:
 # Define path to trimmomatic, FastUniq and file specifying input for
 # FastUniq:
 trimmomatic_path=/data/zool-zost/BIN/Trimmomatic-0.39/trimmomatic-0.39.jar
@@ -53,10 +53,8 @@ FastUniq_input=/data/zool-zost/Novogene/Scripts/fastqlist.txt
 #AdapterTrimmed_forward_paired.fq
 #AdapterTrimmed_reverse_paired.fq
 
-# STEP 5:
-# Set up for loop to conduct filtering for each sample
-# 1..193 <- this will need to be amended depending on number of samples
-# included in sample.list.txt
+# STEP 6:
+# Set up for loop to conduct filtering for each fastq file
 for ReadPair in `ls ${SAMPLE_NAME}_*_1.fq.gz | cut -f1,2,3,4 -d'_'`
 do
 
