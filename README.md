@@ -7,4 +7,6 @@ The following repisitory contains scripts used for processing of Novogene WGS da
 3. FastQC2.sh - conduct secondary quality check using FastQC
 4. Map_sample_reads.sh - map filtered reads to reference genome (outputs multiple bam files per individual)
 5. Create_Single_Sample_Bam.sh - merge multiple bam files to generate a single bam for each individual
-6. Sample_Genotyping.sh -  
+6. Sample_Genotyping.sh - conduct genotyping using GATK haplotype caller
+7. Merge_gVCFs.sh - merge individual sample gVCFs into a multi-sample intermediate gVCF file
+
