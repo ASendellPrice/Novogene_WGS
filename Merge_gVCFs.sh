@@ -28,7 +28,7 @@ GATK_JAR=/data/zool-zost/BIN/gatk-4.1.9.0/gatk
 
 # Combine sample gVCFs into single multi-sample gVCF
 # Using samples included in Norfolk Island hybrid work as an example
-$GATK_JAR CombineGVCFs \
+$GATK_JAR --java-options "-Xmx4g" CombineGVCFs \
   -R reference.fasta \
   --variant Renunion_Zborbonics_WGS.15-179.g.vcf.gz \
   --variant N101.g.vcf.gz \
