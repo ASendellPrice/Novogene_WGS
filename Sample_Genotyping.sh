@@ -32,7 +32,7 @@ module load java/1.8.0
 FASTA=/data/zool-zost/Ref_Genome/GCA_001281735.1_ASM128173v1_genomic.fna
 
 # Set path to sample list
-SAMPLE_LIST=Sample.list
+SAMPLE_LIST=/data/zool-zost/Novogene/Sample.list
 
 # Get sample name and sample diretory using slurm task ID
 SAMPLE_NAME=$(cat $SAMPLE_LIST | head -n $SLURM_ARRAY_TASK_ID | tail -1 | awk {'print $1}')
