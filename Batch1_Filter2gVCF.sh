@@ -119,9 +119,11 @@ else
   mv Filtered_${SAMPLE_NAME}*.bam ${SAMPLE_NAME}.bam
 fi
 
-# Index bam file with samtools index - index is required for genotyping
+# Index bam file with samtools index - index is required for genotyping with GATK
 samtools index ${SAMPLE_NAME}.bam
 
+# Sort bam file with samtools sort - required for genotyping with ANGSD
+samtools sort ${SAMPLE_NAME}.bam -o ${SAMPLE_NAME}.sorted.bam
 
 #######################################################################################################
 # CONDUCT SAMPLE GENOTYPING
@@ -148,3 +150,4 @@ $GATK_JAR HaplotypeCaller \
 --emit-ref-confidence BP_RESOLUTION \
 --output-mode EMIT_ALL_CONFIDENT_SITES \
 -O ${SAMPLE_NAME}.g.vcf.gz
+
