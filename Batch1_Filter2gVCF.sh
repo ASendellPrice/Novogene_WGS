@@ -119,11 +119,9 @@ else
   mv Filtered_${SAMPLE_NAME}*.bam ${SAMPLE_NAME}.bam
 fi
 
-# Index bam file with samtools index - index is required for genotyping with GATK
-samtools index ${SAMPLE_NAME}.bam
-
 # Sort bam file with samtools sort - required for genotyping with ANGSD
-samtools sort ${SAMPLE_NAME}.bam -o ${SAMPLE_NAME}.sorted.bam
+samtools sort ${SAMPLE_NAME}.bam > ${SAMPLE_NAME}.sorted.bam
+rm ${SAMPLE_NAME}.bam
 
 #######################################################################################################
 # CONDUCT SAMPLE GENOTYPING
