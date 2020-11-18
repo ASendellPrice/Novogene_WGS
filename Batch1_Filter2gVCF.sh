@@ -121,6 +121,7 @@ fi
 
 # Sort bam file with samtools sort - required for genotyping with ANGSD
 samtools sort ${SAMPLE_NAME}.bam > ${SAMPLE_NAME}.sorted.bam
+samtools index ${SAMPLE_NAME}.sorted.bam
 rm ${SAMPLE_NAME}.bam
 
 #######################################################################################################
