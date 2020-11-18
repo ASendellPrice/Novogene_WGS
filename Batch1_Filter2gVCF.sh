@@ -144,7 +144,7 @@ FASTA=/data/zool-zost/Ref_Genome/GCA_001281735.1_ASM128173v1_genomic.fna
 # Call geotypes with GATK haplotype caller.
 $GATK_JAR HaplotypeCaller \
 -R $FASTA \
--I ${SAMPLE_NAME}.bam \
+-I ${SAMPLE_NAME}.sorted.bam \
 --emit-ref-confidence BP_RESOLUTION \
 --output-mode EMIT_ALL_CONFIDENT_SITES \
 -O ${SAMPLE_NAME}.g.vcf.gz
